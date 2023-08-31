@@ -23,10 +23,6 @@ function saveToLocalStorage(key: string, value: unknown) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-function removeFromLocalStorage(key: string) {
-  localStorage.removeItem(key);
-}
-
 function App() {
   const initialUserState = {
     state: UserState.LOGGED_OUT,
