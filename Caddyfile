@@ -1,0 +1,13 @@
+localhost {
+  encode gzip
+
+  handle_path /api/* {
+    reverse_proxy playback-poller:3001
+  }
+
+  handle {
+    root * /srv/www/
+    try_files {path} /index.html
+    file_server
+  }
+}
