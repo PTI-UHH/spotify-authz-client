@@ -48,9 +48,9 @@ export function usePostSpotifyAccessToken(
 ) {
   useEffect(() => {
     (async () => {
-      const tokenPostUrl = `${import.meta.env.VITE_POLLING_SERVER_BASE_URL}/${
-        user.id
-      }/auth`;
+      const tokenPostUrl = `${
+        import.meta.env.VITE_POLLING_SERVER_BASE_URL
+      }/user/${user.id}/auth`;
 
       if (spotifyApi && user.state === UserState.LOGGED_IN) {
         const accessToken = await spotifyApi.getAccessToken();
