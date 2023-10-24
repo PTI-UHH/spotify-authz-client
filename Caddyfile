@@ -2,7 +2,15 @@ localhost {
   encode gzip
 
   handle_path /api/* {
-    reverse_proxy playback-poller:3001
+    reverse_proxy playback-poller:{$PTI_PLAYBACK_POLLER_PORT}
+  }
+
+  handle_path /db /db/* {
+    reverse_proxy adminer:{$PTI_ADMINER_PORT}
+  }
+
+  basicauth /admin /db {
+    pti {$PTI_AUTHZ_CLIENT_BASIC_AUTH_PASSWORD_HASH}
   }
 
   handle {
