@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import Userview from './Userview.tsx'
+import UserView from './UserView.tsx'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <Userview />,
+    element: <UserView />,
   },
 ]);
 

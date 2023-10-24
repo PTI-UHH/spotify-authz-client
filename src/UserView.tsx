@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
+import { UserDTO } from "./types";
 
-function Userview() {
+function UserView() {
   const [users, setUsers] = useState([]);
+  const baseUrl = import.meta.env.VITE_POLLING_SERVER_BASE_URL;
+
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const baseUrl = import.meta.env.VITE_POLLING_SERVER_BASE_URL;
-        const allUsersUrl = `${baseUrl}/users`;
-        const response = await fetch(allUsersUrl);
+        const response = await fetch(`${baseUrl}/users`);
+
         if (response.ok) {
           const currentUsers = await response.json();
-          // console.log("All Users:", currentUsers);
           setUsers(currentUsers);
         } else {
           console.error("Failed to fetch users:", response.status);
@@ -19,22 +20,24 @@ function Userview() {
         console.error("Error fetching data:", error);
       }
     }
+
     fetchUsers();
   }, []);
 
   return (
     <div className="px-20">
       <div className="flex flex-row h-9 font-bold">
-        <div className="basis-1/6 text-left">active</div>
+        <div className="basis-1/6 text-left">Active</div>
         <div className="basis-5/6">
           <div className="flex flex-row text-left">
-            <div className="basis-1/2">User Id</div>
-            <div className="basis-1/2">Date</div>
+            <div className="basis-1/3">Id</div>
+            <div className="basis-1/3">Created Date</div>
+            <div className="basis-1/3">Token Expires</div>
           </div>
         </div>
       </div>
       <div>
-        {users.map((user: { id: string }) => (
+        {users.map((user: UserDTO) => (
           <User key={user.id} user={user} />
         ))}
       </div>
@@ -42,25 +45,25 @@ function Userview() {
   );
 }
 
-function User({ user }: any) {
-  const [checked, setChecked] = useState(user.active);
+function User({ user }: { user: UserDTO }) {
+  const [isActive, toggleActive] = useState(user.active);
 
-  const handleChange = () => {
-    async function put_user_active_state() {
+  const toggleUserActive = () => {
+    async function putUserActiveState(active: boolean) {
       try {
         const baseUrl = import.meta.env.VITE_POLLING_SERVER_BASE_URL;
-        const user_active_url = `${baseUrl}/user/${user.id}/active`;
-        const requestBody = { active: !checked };
-        const response = await fetch(user_active_url, {
+        const toggleUserActiveUrl = `${baseUrl}/user/${user.id}/active`;
+        const response = await fetch(toggleUserActiveUrl, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestBody),
+          body: JSON.stringify({ active }),
         });
+
         if (response.ok) {
           const res = await response.json();
-          setChecked(res.active);
+          toggleActive(res.active);
         } else {
           console.error("Failed to change active state", response.status);
         }
@@ -68,7 +71,8 @@ function User({ user }: any) {
         console.error("Error put data:", error);
       }
     }
-    put_user_active_state();
+
+    putUserActiveState(!isActive);
   };
 
   return (
@@ -76,20 +80,21 @@ function User({ user }: any) {
       <div className="basis-1/6 text-left">
         <input
           type="checkbox"
-          checked={checked}
-          onChange={handleChange}
+          checked={isActive}
+          onChange={toggleUserActive}
           readOnly
           className=""
         />
       </div>
       <div className="basis-5/6">
         <div className="flex flex-row text-left">
-          <div className="basis-1/2">{user.id}</div>
-          <div className="basis-1/2">01.01.1900</div>
+          <div className="basis-1/3">{user.id}</div>
+          <div className="basis-1/3">{user.createdAt}</div>
+          <div className="basis-1/3">{user.accessToken?.expires}</div>
         </div>
       </div>
     </div>
   );
 }
 
-export default Userview;
+export default UserView;
