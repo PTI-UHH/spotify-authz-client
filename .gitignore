@@ -3,6 +3,7 @@
 
 ### dotenv ###
 .env*
+.env.*
 
 ### Intellij+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -720,4 +721,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,intellij+all,visualstudiocode,vim,node,react
 
+.vite
 !.env.template
