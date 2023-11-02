@@ -7,8 +7,9 @@ export enum UserState {
 }
 
 export interface User {
-  id: string | null;
-  state: UserState;
+  id?: string;
+  email?: string;
+  state?: UserState;
 }
 
 export interface UserDTO {
