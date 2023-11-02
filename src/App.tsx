@@ -1,8 +1,8 @@
-import { Scopes, SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { Scopes } from "@spotify/web-api-ts-sdk";
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { usePostSpotifyAccessToken, useSpotifyApi } from "./hooks/useSpotify";
-import { User, UserState } from "./types";
+import { User } from "./types";
 import { UserForm, UserFormData } from "./components/UserForm";
 
 const LOCAL_STORAGE_USER_KEY = "PTI_USER";

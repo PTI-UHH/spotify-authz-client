@@ -32,7 +32,7 @@ export function UserForm(props: { onSubmit: (data: UserFormData) => void }) {
     }));
   }
 
-  function handleSubmit(event: any) {
+  function handleSubmit() {
     setFormState((prevFormData) => ({ ...prevFormData, submitted: true }));
     if (formState.idValid && formState.emailValid) {
       const { id, email } = formState;

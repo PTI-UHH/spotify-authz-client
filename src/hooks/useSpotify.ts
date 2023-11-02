@@ -1,6 +1,6 @@
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { useEffect, useRef, useState } from "react";
-import { User, UserState } from "../types";
+import { User } from "../types";
 
 const isUserValid = (user: User) => user?.id && user?.email;
 
