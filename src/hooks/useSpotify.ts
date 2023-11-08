@@ -10,7 +10,6 @@ export function useSpotifyApi(
   scopes: string[],
   user: User
 ) {
-  console.log("useSpotifyApi called");
   const [spotifyApi, setSpotifyApi] = useState<SpotifyApi | null>(null);
   const { current: activeScopes } = useRef(scopes);
 

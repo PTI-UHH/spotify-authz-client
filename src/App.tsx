@@ -1,9 +1,11 @@
 import { Scopes } from "@spotify/web-api-ts-sdk";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { usePostSpotifyAccessToken, useSpotifyApi } from "./hooks/useSpotify";
 import { User } from "./types";
 import { UserForm, UserFormData } from "./components/UserForm";
+
+type Status = { success: boolean; message: string; result: string };
 
 const LOCAL_STORAGE_USER_KEY = "PTI_USER";
 
@@ -18,9 +20,10 @@ function saveToLocalStorage(key: string, value: unknown) {
 function App() {
   const initialUserState = { ...getFromLocalStorage(LOCAL_STORAGE_USER_KEY) };
   const [user, setUser] = useState<User>(initialUserState);
-  const status = useRef<{ success: boolean; message: string }>({
+  const [status, setStatus] = useState<Status>({
     success: false,
     message: "",
+    result: "",
   });
 
   const spotifyApi = useSpotifyApi(
@@ -47,39 +50,56 @@ function App() {
   const response = usePostSpotifyAccessToken(spotifyApi, user);
   useEffect(() => {
     (async () => {
+      if (response) {
+        try {
+          if (response.ok) {
+            const json = await response.json();
 
-    if (response) {
-      status.current.success = response.ok;
+            setStatus({
+              success: response.ok,
+              result: JSON.stringify(json, null, 2),
+              message: `POST to ${response.url} success: ${response.status}`,
+            });
+          } else {
+            const text = await response.text();
+            setStatus({
+              success: response.ok,
+              result: text,
+              message: `POST to ${response.url} failed: ${response.status}`,
+            });
+          }
 
-      if (response.ok) {
-        resetUser();
-        const json = await response.json();
-        status.current.message = `POST to ${response.url} success: ${response.status}\n ${json}`;
-      } else {
-        const text = await response.text()
-        status.current.message = `POST to ${response.url} failed: ${response.status}\n ${text}`;
+          resetUser();
+        } catch (e) {
+          console.error(e);
+        }
       }
-
-      console.log(status)
-      console.log(response)
-    } else {
-      status.current.success = false;
-      status.current.message = "";
-    }
-    })()
+    })();
   }, [response, spotifyApi, status]);
 
+  const boxColorClass =
+    status.success && status.message
+      ? "bg-green-100 border border-green-400"
+      : "bg-red-100 border border-red-400";
   const messageColorClass =
-    status.current.success && status.current.message
-      ? "text-green-500"
-      : "text-red-500";
+    status.success && status.message ? "text-green-700" : "text-red-700";
 
   return (
     <div className="w-full flex flex-col flex-auto justify-center items-center bg-gray-200">
       <UserForm onSubmit={handleFormSubmit}></UserForm>
-      <p className={`text-xl font-bold ${messageColorClass}`}>
-        {status.current.message}
-      </p>
+      <div
+        className={`${boxColorClass} ${messageColorClass} px-4 py-3 rounded relative`}
+        role="alert"
+        hidden={!status.message}
+      >
+        <strong className="font-bold">
+          {status.success ? "Success: " : "Error: "}
+        </strong>
+        <span className="block">{status.message}</span>
+        <pre className="block">
+          <code>{status.result}</code>
+        </pre>
+      </div>
     </div>
   );
 }
