@@ -15,7 +15,7 @@ export function UserForm(props: { onSubmit: (data: UserFormData) => void }) {
   const [formState, setFormState] = useState<UserFormState>({ id: "", email: "" });
 
   function handleIdChange(userId: string) {
-    const userIdValid = userId.match(/^[0-9]{4}$/) !== null;
+    const userIdValid = userId.match(/^[0-9]+$/) !== null;
     setFormState((prevFormData) => ({
       ...prevFormData,
       id: userId,
@@ -24,7 +24,7 @@ export function UserForm(props: { onSubmit: (data: UserFormData) => void }) {
   }
 
   function handleEmailChange(email: string) {
-    const emailValid = email.match(/@gmail.com$/) !== null;
+    const emailValid = email.match(/@.*\.(com|de)$/) !== null;
     setFormState((prevFormData) => ({
       ...prevFormData,
       email,
