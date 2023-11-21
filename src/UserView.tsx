@@ -25,7 +25,7 @@ function UserView() {
   }, []);
 
   return (
-    <div className="px-20">
+    <div className="w-full px-40">
       <div className="flex flex-row h-9 font-bold">
         <div className="basis-1/6 text-left">Active</div>
         <div className="basis-5/6">
