@@ -76,7 +76,7 @@ export function usePostSpotifyAccessToken(
         const accessToken = await spotifyApi.getAccessToken();
 
         const result = await fetch(tokenPostUrl, {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },

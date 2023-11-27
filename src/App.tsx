@@ -54,18 +54,19 @@ function App() {
         try {
           if (response.ok) {
             const json = await response.json();
+            const putMethod = response.status === 201 ? "created" : "updated";
 
             setStatus({
               success: response.ok,
               result: JSON.stringify(json, null, 2),
-              message: `POST to ${response.url} success: ${response.status}`,
+              message: `PUT to ${response.url} success, User ${putMethod}: ${response.status}`,
             });
           } else {
             const text = await response.text();
             setStatus({
               success: response.ok,
               result: text,
-              message: `POST to ${response.url} failed: ${response.status}`,
+              message: `PUT to ${response.url} failed: ${response.status}`,
             });
           }
 
